@@ -1,44 +1,45 @@
 // src/App.tsx
 
-import { Routes, Route } from 'react-router-dom';
-import Landing from '@/pages/Landing/Landing';
-// import Auth        from '@/pages/Auth/Auth';
-// import Dashboard   from '@/pages/Dashboard/Dashboard';
-// import Courses     from '@/pages/Courses/Courses';
-// import CoursePage  from '@/pages/Courses/CoursePage';
-// import TopicPage   from '@/pages/Topic/TopicPage';
-// import QuizPage    from '@/pages/Quiz/QuizPage';
-// import ExamPage    from '@/pages/Exam/ExamPage';
-// import ExamResult  from '@/pages/Exam/ExamResult';
-// import AdminPanel  from '@/pages/Admin/AdminPanel';
-// import ProtectedRoute from '@/router/ProtectedRoute';
-// import NotFound    from '@/pages/NotFound';
+import { Routes, Route } from "react-router-dom";
+import PublicRoute    from "@/router/PublicRoute";
+import ProtectedRoute from "@/router/ProtectedRoute";
+import Landing        from "@/pages/Landing/Landing";
+import Auth           from "@/pages/Auth/Auth";
+import Dashboard      from "@/pages/Dashboard/Dashboard";
+// import Courses     from "@/pages/Courses/Courses";
+// import CoursePage  from "@/pages/Courses/CoursePage";
+// import TopicPage   from "@/pages/Topic/TopicPage";
+// import QuizPage    from "@/pages/Quiz/QuizPage";
+// import ExamPage    from "@/pages/Exam/ExamPage";
+// import ExamResult  from "@/pages/Exam/ExamResult";
+// import AdminPanel  from "@/pages/Admin/AdminPanel";
 
 export default function App() {
-  return (
-    <Routes>
-      {/* Публичные */}
-      <Route path="/"     element={<Landing />} />
-      {/* <Route path="/auth" element={<Auth />} /> */}
+    return (
+        <Routes>
 
-      {/* Защищённые (только авторизованные) */}
-      {/* <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard"                          element={<Dashboard />} />
-        <Route path="/courses"                            element={<Courses />} />
-        <Route path="/courses/:courseId"                  element={<CoursePage />} />
-        <Route path="/courses/:courseId/:topicId"         element={<TopicPage />} />
-        <Route path="/courses/:courseId/:topicId/quiz"    element={<QuizPage />} />
-        <Route path="/exam"                               element={<ExamPage />} />
-        <Route path="/exam/result"                        element={<ExamResult />} />
-      </Route> */}
+            {/* ── Публичные (авторизованный получит редирект на /dashboard) ── */}
+            <Route element={<PublicRoute />}>
+                <Route path="/"     element={<Landing />} />
+                <Route path="/auth" element={<Auth />} />
+            </Route>
 
-      {/* Только для роли admin */}
-      {/* <Route element={<ProtectedRoute requiredRole="admin" />}>
+            {/* ── Защищённые (неавторизованный получит редирект на /auth) ── */}
+            <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                {/* <Route path="/courses"                         element={<Courses />} /> */}
+                {/* <Route path="/courses/:courseId"               element={<CoursePage />} /> */}
+                {/* <Route path="/courses/:courseId/:topicId"      element={<TopicPage />} /> */}
+                {/* <Route path="/courses/:courseId/:topicId/quiz" element={<QuizPage />} /> */}
+                {/* <Route path="/exam"                            element={<ExamPage />} /> */}
+                {/* <Route path="/exam/result"                     element={<ExamResult />} /> */}
+            </Route>
+
+            {/* ── Только admin ── */}
+            {/* <Route element={<ProtectedRoute requiredRole="admin" />}>
         <Route path="/admin/*" element={<AdminPanel />} />
       </Route> */}
 
-      {/* 404 */}
-      {/* <Route path="*" element={<NotFound />} /> */}
-    </Routes>
-  );
+        </Routes>
+    );
 }

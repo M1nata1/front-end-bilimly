@@ -1,4 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+// src/pages/Landing/Landing.tsx
+
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
 
 // ============================================================
 //  КОНФИГУРАЦИЯ — меняй здесь, не трогая остальной код
@@ -6,8 +10,8 @@ import { useState, useEffect, useRef } from "react";
 
 // --- Бренд ---
 const BRAND = {
-    name:   "КТ",
-    accent: "Про",
+    name:   "Bilim",
+    accent: "Ly",
     year:   "2025",
 };
 
@@ -40,17 +44,15 @@ const FONTS = {
 // --- Навигация ---
 const NAV_LINKS     = ["О платформе", "Курсы", "Экзамен", "FAQ"];
 const NAV_BTN_LABEL = "Войти";
-const NAV_BTN_HREF  = "/auth";
 
 // --- Hero ---
 const HERO = {
     label:          "Подготовка к КТ",
     titleLine1:     "Сдай КТ",
-    titleLine2:     "на максимум",        // красный акцент
+    titleLine2:     "на максимум",
     titleLine3:     "с первой попытки",
     description:    "Курсы по всем предметам, мини-тесты и реальный формат экзамена с таймером — всё в одном месте.",
     btnPrimary:     "Начать подготовку",
-    btnPrimaryHref: "/auth",
     btnSecondary:   "Смотреть курсы",
 };
 
@@ -115,7 +117,6 @@ const EXAM_CTA = {
     description: "Таймер, 120 вопросов, анализ ошибок и итоговый балл — как на настоящем экзамене.",
     features:    ["120 вопросов", "180 минут", "Разбор ошибок", "Итоговый балл"],
     btnLabel:    "Начать экзамен",
-    btnHref:     "/exam",
 };
 
 // --- Футер ---
@@ -129,7 +130,10 @@ const FOOTER = {
 // ============================================================
 
 export default function Landing() {
+    const navigate = useNavigate();
+    const isAuth   = useAuthStore(s => s.isAuth);
     const [scrolled, setScrolled] = useState(false);
+    BRAND;
 
     useEffect(() => {
         const fn = () => setScrolled(window.scrollY > 40);
@@ -137,9 +141,11 @@ export default function Landing() {
         return () => window.removeEventListener("scroll", fn);
     }, []);
 
-    const pct = Math.round(
-        (EXAM_DEMO.progressCurrent / EXAM_DEMO.progressTotal) * 100
-    );
+    // Все CTA ведут в /auth или /dashboard если уже вошёл
+    const handleCTA  = () => navigate(isAuth ? "/dashboard" : "/auth");
+    const handleExam = () => navigate(isAuth ? "/exam"      : "/auth");
+
+    const pct = Math.round((EXAM_DEMO.progressCurrent / EXAM_DEMO.progressTotal) * 100);
 
     return (
         <div style={{ background: COLORS.bgPage, color: COLORS.textBody, fontFamily: FONTS.body, minHeight: "100vh", overflowX: "hidden" }}>
@@ -169,29 +175,20 @@ export default function Landing() {
       `}</style>
 
             {/* NAV */}
-            <nav style={{
-                position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-                padding: ".85rem 2.5rem",
-                background: scrolled ? `${COLORS.bgPage}EC` : "transparent",
-                backdropFilter: scrolled ? "blur(14px)" : "none",
-                borderBottom: scrolled ? `1px solid ${COLORS.border}` : "none",
-                transition: "all .25s",
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-            }}>
+            <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: ".85rem 2.5rem", background: scrolled ? `${COLORS.bgPage}EC` : "transparent", backdropFilter: scrolled ? "blur(14px)" : "none", borderBottom: scrolled ? `1px solid ${COLORS.border}` : "none", transition: "all .25s", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ fontFamily: FONTS.display, fontSize: "1.15rem", fontWeight: 800, letterSpacing: "-.01em" }}>
                     {BRAND.name}<span style={{ color: COLORS.accent }}>{BRAND.accent}</span>
                 </div>
                 <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
                     {NAV_LINKS.map(l => <span key={l} className="nav-link">{l}</span>)}
-                    <button className="btn-red" style={{ padding: ".45rem 1.2rem", fontSize: ".8rem" }}
-                            onClick={() => window.location.href = NAV_BTN_HREF}>
-                        {NAV_BTN_LABEL}
+                    <button className="btn-red" style={{ padding: ".45rem 1.2rem", fontSize: ".8rem" }} onClick={handleCTA}>
+                        {isAuth ? "Личный кабинет" : NAV_BTN_LABEL}
                     </button>
                 </div>
             </nav>
 
             {/* HERO */}
-            <section style={{ padding: "5.5rem 2.5rem 3rem", maxWidth: "1080px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr minmax(0, 420px)", gap: "4rem", alignItems: "center", minHeight: "88vh" }}>
+            <section style={{ padding: "5.5rem 2.5rem 3rem", maxWidth: "1080px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr minmax(0,420px)", gap: "4rem", alignItems: "center", minHeight: "88vh" }}>
                 <div>
                     <p className="f1 section-label">{HERO.label}</p>
                     <h1 className="f2" style={{ fontFamily: FONTS.display, fontSize: "clamp(2.2rem,4vw,3.4rem)", fontWeight: 800, lineHeight: 1.1, letterSpacing: "-.025em", color: COLORS.textPrimary, marginBottom: "1.2rem" }}>
@@ -203,8 +200,8 @@ export default function Landing() {
                         {HERO.description}
                     </p>
                     <div className="f4" style={{ display: "flex", gap: ".75rem" }}>
-                        <button className="btn-red" onClick={() => window.location.href = HERO.btnPrimaryHref}>{HERO.btnPrimary}</button>
-                        <button className="btn-ghost">{HERO.btnSecondary}</button>
+                        <button className="btn-red" onClick={handleCTA}>{HERO.btnPrimary}</button>
+                        <button className="btn-ghost" onClick={handleCTA}>{HERO.btnSecondary}</button>
                     </div>
                     <div className="f4" style={{ display: "flex", gap: "2rem", marginTop: "2.5rem", paddingTop: "2rem", borderTop: `1px solid ${COLORS.border}` }}>
                         {HERO_STATS.map((s, i) => (
@@ -221,10 +218,9 @@ export default function Landing() {
 
                 {/* Exam demo card */}
                 <div className="bob">
-                    <div style={{ background: COLORS.bgCard, border: `1px solid rgba(255,255,255,0.08)`, borderRadius: "16px", padding: "1.4rem", position: "relative", overflow: "hidden" }}>
+                    <div style={{ background: COLORS.bgCard, border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "1.4rem", position: "relative", overflow: "hidden" }}>
                         <div style={{ position: "absolute", top: "-40px", right: "-40px", width: "180px", height: "180px", background: "rgba(255,58,58,0.07)", borderRadius: "50%", filter: "blur(50px)", pointerEvents: "none" }} />
                         <p className="section-label">{EXAM_DEMO.label}</p>
-                        {/* Timer row */}
                         <div style={{ background: COLORS.bgPage, borderRadius: "10px", padding: "1rem", marginBottom: "1rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                             <div>
                                 <div style={{ fontSize: ".65rem", color: COLORS.textFaint, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: ".3rem" }}>{EXAM_DEMO.timerLabel}</div>
@@ -237,28 +233,17 @@ export default function Landing() {
                                 </div>
                             </div>
                         </div>
-                        {/* Progress bar */}
                         <div style={{ height: "4px", background: "rgba(255,255,255,0.05)", borderRadius: "2px", marginBottom: "1rem", overflow: "hidden" }}>
                             <div style={{ height: "100%", width: `${pct}%`, background: COLORS.accent, borderRadius: "2px" }} />
                         </div>
-                        {/* Question */}
                         <div style={{ border: `1px solid ${COLORS.border}`, borderRadius: "10px", padding: "1rem" }}>
                             <div style={{ fontSize: ".68rem", color: COLORS.accent, fontWeight: 700, letterSpacing: ".06em", textTransform: "uppercase", marginBottom: ".6rem" }}>
                                 Вопрос {EXAM_DEMO.questionNum}
                             </div>
-                            <p style={{ fontSize: ".8rem", color: "#B0B0CC", lineHeight: 1.6, marginBottom: ".8rem" }}>
-                                {EXAM_DEMO.questionText}
-                            </p>
+                            <p style={{ fontSize: ".8rem", color: "#B0B0CC", lineHeight: 1.6, marginBottom: ".8rem" }}>{EXAM_DEMO.questionText}</p>
                             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".4rem" }}>
                                 {EXAM_DEMO.options.map(o => (
-                                    <div key={o.label} style={{
-                                        background: o.correct ? "rgba(255,58,58,0.1)" : COLORS.bgPage,
-                                        border: `1px solid ${o.correct ? "rgba(255,58,58,0.3)" : "rgba(255,255,255,0.06)"}`,
-                                        borderRadius: "6px", padding: ".45rem .7rem",
-                                        fontSize: ".73rem",
-                                        color: o.correct ? "#FF6B6B" : COLORS.textMuted,
-                                        fontWeight: o.correct ? 700 : 400,
-                                    }}>{o.label}</div>
+                                    <div key={o.label} style={{ background: o.correct ? "rgba(255,58,58,0.1)" : COLORS.bgPage, border: `1px solid ${o.correct ? "rgba(255,58,58,0.3)" : "rgba(255,255,255,0.06)"}`, borderRadius: "6px", padding: ".45rem .7rem", fontSize: ".73rem", color: o.correct ? "#FF6B6B" : COLORS.textMuted, fontWeight: o.correct ? 700 : 400 }}>{o.label}</div>
                                 ))}
                             </div>
                         </div>
@@ -276,17 +261,13 @@ export default function Landing() {
                 <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "1.75rem", flexWrap: "wrap", gap: "1rem" }}>
                     <div>
                         <p className="section-label">{COURSES_SECTION.label}</p>
-                        <h2 style={{ fontFamily: FONTS.display, fontSize: "1.6rem", fontWeight: 800, color: COLORS.textPrimary, letterSpacing: "-.02em" }}>
-                            {COURSES_SECTION.title}
-                        </h2>
+                        <h2 style={{ fontFamily: FONTS.display, fontSize: "1.6rem", fontWeight: 800, color: COLORS.textPrimary, letterSpacing: "-.02em" }}>{COURSES_SECTION.title}</h2>
                     </div>
-                    <p style={{ fontSize: ".82rem", color: COLORS.textFaint, maxWidth: "280px", lineHeight: 1.65 }}>
-                        {COURSES_SECTION.description}
-                    </p>
+                    <p style={{ fontSize: ".82rem", color: COLORS.textFaint, maxWidth: "280px", lineHeight: 1.65 }}>{COURSES_SECTION.description}</p>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: ".6rem" }}>
                     {SUBJECTS.map(s => (
-                        <div key={s.name} className="chip">
+                        <div key={s.name} className="chip" onClick={handleCTA}>
                             <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: s.color, flexShrink: 0 }} />
                             <span style={{ fontWeight: 700, fontSize: ".85rem" }}>{s.name}</span>
                             <span style={{ marginLeft: "auto", fontSize: ".72rem", color: COLORS.textFaint }}>{s.topics} тем</span>
@@ -299,9 +280,7 @@ export default function Landing() {
             <section style={{ background: COLORS.bgSection, borderTop: `1px solid ${COLORS.border}`, borderBottom: `1px solid ${COLORS.border}`, padding: "4rem 2.5rem" }}>
                 <div style={{ maxWidth: "1080px", margin: "0 auto" }}>
                     <p className="section-label">{HOW_SECTION.label}</p>
-                    <h2 style={{ fontFamily: FONTS.display, fontSize: "1.6rem", fontWeight: 800, color: COLORS.textPrimary, letterSpacing: "-.02em", marginBottom: "2rem" }}>
-                        {HOW_SECTION.title}
-                    </h2>
+                    <h2 style={{ fontFamily: FONTS.display, fontSize: "1.6rem", fontWeight: 800, color: COLORS.textPrimary, letterSpacing: "-.02em", marginBottom: "2rem" }}>{HOW_SECTION.title}</h2>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: ".75rem" }}>
                         {HOW_STEPS.map(s => (
                             <div key={s.n} className="step">
@@ -319,18 +298,14 @@ export default function Landing() {
                 <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: "16px", padding: "2.5rem 3rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "2rem" }}>
                     <div style={{ maxWidth: "460px" }}>
                         <p className="section-label">{EXAM_CTA.label}</p>
-                        <h2 style={{ fontFamily: FONTS.display, fontSize: "1.55rem", fontWeight: 800, color: COLORS.textPrimary, letterSpacing: "-.02em", marginBottom: ".75rem" }}>
-                            {EXAM_CTA.title}
-                        </h2>
+                        <h2 style={{ fontFamily: FONTS.display, fontSize: "1.55rem", fontWeight: 800, color: COLORS.textPrimary, letterSpacing: "-.02em", marginBottom: ".75rem" }}>{EXAM_CTA.title}</h2>
                         <p style={{ color: COLORS.textFaint, lineHeight: 1.7, fontSize: ".82rem" }}>{EXAM_CTA.description}</p>
                     </div>
                     <div>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: ".4rem", marginBottom: "1.25rem" }}>
                             {EXAM_CTA.features.map(f => <span key={f} className="feat-tag">{f}</span>)}
                         </div>
-                        <button className="btn-red" onClick={() => window.location.href = EXAM_CTA.btnHref}>
-                            {EXAM_CTA.btnLabel}
-                        </button>
+                        <button className="btn-red" onClick={handleExam}>{EXAM_CTA.btnLabel}</button>
                     </div>
                 </div>
             </section>
@@ -342,9 +317,7 @@ export default function Landing() {
                 </div>
                 <p style={{ fontSize: ".72rem", color: COLORS.textGhost }}>© {BRAND.year} {BRAND.name}{BRAND.accent}. {FOOTER.copyright}</p>
                 <div style={{ display: "flex", gap: "1.5rem" }}>
-                    {FOOTER.links.map(l => (
-                        <span key={l} style={{ fontSize: ".72rem", color: COLORS.textGhost, cursor: "pointer" }}>{l}</span>
-                    ))}
+                    {FOOTER.links.map(l => <span key={l} style={{ fontSize: ".72rem", color: COLORS.textGhost, cursor: "pointer" }}>{l}</span>)}
                 </div>
             </footer>
         </div>
