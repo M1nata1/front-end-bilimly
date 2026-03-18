@@ -14,7 +14,7 @@ const BRAND = {
 
 // backend: /users/auth/...
 const API = {
-    baseUrl: "http://localhost:8000", // ← поменяй на прод URL
+    baseUrl: "http://localhost:8000", //
     login: "/users/auth/login/", // POST
     register: "/users/auth/register/", // POST
     refresh: "/users/auth/token/refresh/", // POST
