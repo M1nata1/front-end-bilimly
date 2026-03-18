@@ -1,5 +1,5 @@
 // src/pages/Auth/Auth.tsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 
