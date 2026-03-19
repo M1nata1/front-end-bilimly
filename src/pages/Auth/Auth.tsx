@@ -3,17 +3,25 @@ import React, { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 
+// ============================================================
+// КОНФИГУРАЦИЯ
+// ============================================================
+
 const BRAND = { name: "Bilim", accent: "Ly", year: "2025" };
 
+// backend: /users/auth/...
 const API = {
-    baseUrl: "http://localhost:8000",
-    login: "/users/auth/login/",
-    register: "/users/auth/register/",
-    refresh: "/users/auth/token/refresh/",
+    baseUrl: "http://localhost:8000", // URL
+    login: "/users/auth/login/", //POST
+    register: "/users/auth/register/", //POST
+    refresh: "/users/auth/token/refresh/", //POST
 };
 
 const REDIRECT = { student: "/dashboard", admin: "/admin" };
 
+// ============================================================
+// ТЕКСТЫ
+// ============================================================
 const COPY = {
     label: "Добро пожаловать",
     errEmpty: "Заполни все поля",
