@@ -61,6 +61,9 @@ const COPY = {
     },
 };
 
+// ============================================================
+// ДИЗАЙН
+// ============================================================
 const COLORS = {
     bgPage: "#0D0D11",
     bgLeft: "#0A0A0E",
@@ -131,6 +134,9 @@ const STUDY_ITEMS: StudyItem[] = [
     { top: "91%", left: "76%", rotate: -8, scale: 0.92, delay: 0.68, duration: 10.2, fx: 13, fy: 13, fr: -2, kind: "chip", text: "вариант A" },
 ];
 
+// ============================================================
+// API
+// ============================================================
 interface LoginResponse { access: string; refresh: string; }
 interface ApiError { status?: number; error?: string; detail?: string; message?: string; }
 
@@ -146,6 +152,10 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
 const loginRequest = (email: string, password: string) => postJson<LoginResponse>(`${API.baseUrl}${API.login}`, { email, password });
 const registerRequest = (email: string, username: string, password: string, phone_number: string) => postJson<LoginResponse>(`${API.baseUrl}${API.register}`, { email, username, password, phone_number });
 export const refreshAccessToken = (refresh: string) => postJson<{ access: string }>(`${API.baseUrl}${API.refresh}`, { refresh });
+
+// ============================================================
+// ДЕКОР: "движение жидкости" иконок/формул (правый блок)
+// ============================================================
 
 function StudyCloud() {
     const Icon = ({ name }: { name: NonNullable<StudyItem["icon"]> }) => {
@@ -173,6 +183,9 @@ function StudyCloud() {
     );
 }
 
+// ============================================================
+// PAGE
+// ============================================================
 type Mode = "login" | "register" | "forgot";
 
 export default function Auth() {
