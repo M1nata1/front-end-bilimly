@@ -3,9 +3,13 @@
 import { Routes, Route } from "react-router-dom";
 import PublicRoute    from "@/router/PublicRoute";
 import ProtectedRoute from "@/router/ProtectedRoute";
-import Landing        from "@/pages/Landing/Landing";
-import Auth           from "@/pages/Auth/Auth";
-import Dashboard      from "@/pages/Dashboard/Dashboard";
+
+import Landing    from "@/pages/Landing/Landing";
+import Auth       from "@/pages/Auth/Auth";
+import FAQ        from "@/pages/FAQ/FAQ";
+import TrialExam  from "@/pages/Exam/TrialExam";
+import Dashboard  from "@/pages/Dashboard/Dashboard";
+
 // import Courses     from "@/pages/Courses/Courses";
 // import CoursePage  from "@/pages/Courses/CoursePage";
 // import TopicPage   from "@/pages/Topic/TopicPage";
@@ -15,31 +19,36 @@ import Dashboard      from "@/pages/Dashboard/Dashboard";
 // import AdminPanel  from "@/pages/Admin/AdminPanel";
 
 export default function App() {
-    return (
-        <Routes>
+  return (
+    <Routes>
 
-            {/* ── Публичные (авторизованный получит редирект на /dashboard) ── */}
-            <Route element={<PublicRoute />}>
-                <Route path="/"     element={<Landing />} />
-                <Route path="/auth" element={<Auth />} />
-            </Route>
+      {/* ── Полностью публичные (без проверки авторизации) ── */}
+      <Route path="/faq"        element={<FAQ />} />
+      <Route path="/exam/trial" element={<TrialExam />} />
+      {/* <Route path="/policy"  element={<Policy />} /> */}
 
-            {/* ── Защищённые (неавторизованный получит редирект на /auth) ── */}
-            <Route element={<ProtectedRoute />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                {/* <Route path="/courses"                         element={<Courses />} /> */}
-                {/* <Route path="/courses/:courseId"               element={<CoursePage />} /> */}
-                {/* <Route path="/courses/:courseId/:topicId"      element={<TopicPage />} /> */}
-                {/* <Route path="/courses/:courseId/:topicId/quiz" element={<QuizPage />} /> */}
-                {/* <Route path="/exam"                            element={<ExamPage />} /> */}
-                {/* <Route path="/exam/result"                     element={<ExamResult />} /> */}
-            </Route>
+      {/* ── Публичные, авторизованный → /dashboard ── */}
+      <Route element={<PublicRoute />}>
+        <Route path="/"     element={<Landing />} />
+        <Route path="/auth" element={<Auth />} />
+      </Route>
 
-            {/* ── Только admin ── */}
-            {/* <Route element={<ProtectedRoute requiredRole="admin" />}>
+      {/* ── Защищённые — неавторизованный → /auth ── */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        {/* <Route path="/courses"                         element={<Courses />} /> */}
+        {/* <Route path="/courses/:courseId"               element={<CoursePage />} /> */}
+        {/* <Route path="/courses/:courseId/:topicId"      element={<TopicPage />} /> */}
+        {/* <Route path="/courses/:courseId/:topicId/quiz" element={<QuizPage />} /> */}
+        {/* <Route path="/exam"                            element={<ExamPage />} /> */}
+        {/* <Route path="/exam/result"                     element={<ExamResult />} /> */}
+      </Route>
+
+      {/* ── Только admin ── */}
+      {/* <Route element={<ProtectedRoute requiredRole="admin" />}>
         <Route path="/admin/*" element={<AdminPanel />} />
       </Route> */}
 
-        </Routes>
-    );
+    </Routes>
+  );
 }
