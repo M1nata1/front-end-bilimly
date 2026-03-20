@@ -27,6 +27,7 @@ export const REDIRECT = {
 export const COPY = {
   label:      "Добро пожаловать",
   errEmpty:   "Заполни все поля",
+  errPhone:   "Номер телефона должен содержать ровно 11 цифр",
   errInvalid: "Неверный email или пароль",
   errLimit:   "Слишком много попыток. Попробуй позже.",
   errServer:  "Ошибка сервера. Попробуй позже.",

@@ -98,6 +98,7 @@ export default function Auth() {
 
     if (mode === "login"    && (!email.trim() || !password))                                          { setError(COPY.errEmpty); pulseError(); return; }
     if (mode === "register" && (!regEmail.trim() || !username.trim() || !phone.trim() || !regPass))   { setError(COPY.errEmpty); pulseError(); return; }
+    if (mode === "register" && phone.length !== 11) { setError(COPY.errPhone); pulseError(); return; }
 
     setLoading(true);
     try {
@@ -223,7 +224,7 @@ export default function Auth() {
                     </Field>
                     <Field label={COPY.register.labelPhone}>
                       <input className="inp" type="tel" placeholder="87771234567"
-                             value={phone} onChange={e => setPhone(e.target.value)} />
+                             value={phone} onChange={e => setPhone(e.target.value.replace(/\D/g, "").slice(0, 11))} />
                     </Field>
                     <Field label={COPY.register.labelPass} style={{ marginBottom: "1.15rem" }}>
                       <PassInput value={regPass} onChange={setRegPass} show={showPass} toggle={() => setShowPass(p => !p)} placeholder="минимум 8 символов" newPass />
