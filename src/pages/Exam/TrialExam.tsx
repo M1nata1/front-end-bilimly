@@ -150,12 +150,14 @@ export default function TrialExam() {
   const answered  = answers.filter(a => a !== null).length;
 
   return (
-    <div style={{ background: COLORS.bgPage, color: COLORS.textBody, fontFamily: FONTS.body, minHeight: "100vh" }}>
-      <link href={FONTS.googleUrl} rel="stylesheet" />
-      <style>{`
+      <div style={{ background: COLORS.bgPage, color: COLORS.textBody, fontFamily: FONTS.body, minHeight: "100vh" }}>
+        <link href={FONTS.googleUrl} rel="stylesheet" />
+        <style>{`
         *{box-sizing:border-box;margin:0;padding:0}
         ::selection{background:#FF3A3A30}
         .section-label{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:${COLORS.accent};margin-bottom:.6rem;display:block}
+        .logo-link{display:inline-flex;align-items:center;font-family:${FONTS.display};font-size:1.26rem;font-weight:900;letter-spacing:-.01em;color:${COLORS.textBody};cursor:pointer;width:fit-content;transition:opacity .18s ease,filter .18s ease,transform .18s ease}
+        .logo-link:hover{opacity:.72;filter:brightness(1.04);transform:translateY(-1px)}
         .btn-red{background:${COLORS.accent};color:#fff;border:none;padding:.75rem 1.75rem;border-radius:8px;font-family:${FONTS.body};font-weight:700;font-size:.875rem;cursor:pointer;transition:all .18s}
         .btn-red:hover{background:${COLORS.accentHover};transform:translateY(-1px)}
         .btn-ghost{background:transparent;color:${COLORS.textBody};border:1px solid rgba(255,255,255,.15);padding:.75rem 1.75rem;border-radius:8px;font-family:${FONTS.body};font-weight:600;font-size:.875rem;cursor:pointer;transition:all .18s}
@@ -168,155 +170,153 @@ export default function TrialExam() {
         .num{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum","lnum"}
       `}</style>
 
-      {/* NAV */}
-      <nav style={{ padding: ".9rem 2.5rem", background: `${COLORS.bgPage}EC`, backdropFilter: "blur(14px)", borderBottom: `1px solid ${COLORS.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ fontFamily: FONTS.display, fontSize: "1.1rem", fontWeight: 800, letterSpacing: "-.01em", cursor: "pointer" }} onClick={() => navigate("/")}>
-          {BRAND.name}<span style={{ color: COLORS.accent }}>{BRAND.accent}</span>
-        </div>
-        {phase === "exam" && (
-          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: ".65rem", fontWeight: 600, color: COLORS.textFaint, textTransform: "uppercase", letterSpacing: ".06em" }}>{COPY.timerLabel}</div>
-              <div className="num" style={{ fontFamily: FONTS.display, fontWeight: 800, fontSize: "1.2rem", color: timeLeft < 300 ? COLORS.accent : COLORS.textPrimary }}>
-                {formatTime(timeLeft)}
-              </div>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: ".65rem", fontWeight: 600, color: COLORS.textFaint, textTransform: "uppercase", letterSpacing: ".06em" }}>{COPY.progressLabel}</div>
-              <div className="num" style={{ fontFamily: FONTS.display, fontWeight: 800, fontSize: "1.2rem", color: COLORS.textPrimary }}>
-                {answered}<span style={{ fontWeight: 400, color: COLORS.textFaint, fontSize: ".85rem" }}> / {MOCK_QUESTIONS.length}</span>
-              </div>
-            </div>
-            <button style={{ background: "rgba(255,58,58,0.1)", color: COLORS.accent, border: `1px solid ${COLORS.accentBorder}`, borderRadius: "8px", padding: ".45rem 1rem", fontFamily: FONTS.body, fontWeight: 700, fontSize: ".8rem", cursor: "pointer" }} onClick={finishExam}>
-              {COPY.btnFinish}
-            </button>
+        {/* NAV */}
+        <nav style={{ padding: ".9rem 2.5rem", background: `${COLORS.bgPage}EC`, backdropFilter: "blur(14px)", borderBottom: `1px solid ${COLORS.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
+          <div className="logo-link" onClick={() => navigate("/")} title="В главное меню">
+            {BRAND.name}<span style={{ color: COLORS.accent }}>{BRAND.accent}</span>
           </div>
-        )}
-        {phase !== "exam" && (
-          <span style={{ fontSize: ".82rem", color: COLORS.textFaint, cursor: "pointer" }} onClick={() => navigate(-1)}>← Назад</span>
-        )}
-      </nav>
-
-      <div style={{ maxWidth: "760px", margin: "0 auto", padding: "3rem 2.5rem" }}>
-
-        {/* ── INTRO ── */}
-        {phase === "intro" && (
-          <div>
-            <span className="section-label">{COPY.pageLabel}</span>
-            <h1 style={{ fontFamily: FONTS.display, fontSize: "clamp(1.8rem,4vw,2.6rem)", fontWeight: 800, color: COLORS.textPrimary, letterSpacing: "-.025em", marginBottom: ".5rem" }}>
-              {COPY.pageTitle}
-            </h1>
-            <p style={{ fontSize: ".9rem", color: COLORS.textMuted, marginBottom: "2.5rem" }}>{COPY.pageDesc}</p>
-
-            <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: "14px", padding: "1.5rem", marginBottom: "1.5rem" }}>
-              <div style={{ fontSize: ".72rem", fontWeight: 700, color: COLORS.textFaint, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "1rem" }}>Предметы пробного КТ</div>
-              {TRIAL_SUBJECTS.map(s => (
-                <div key={s.id} style={{ display: "flex", alignItems: "center", gap: ".75rem", marginBottom: ".65rem" }}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: s.color, flexShrink: 0 }} />
-                  <span style={{ fontWeight: 700, fontSize: ".9rem" }}>{s.name}</span>
-                  <span style={{ marginLeft: "auto", fontSize: ".78rem", color: COLORS.textFaint }}>{s.count} вопросов</span>
+          {phase === "exam" && (
+              <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: ".65rem", fontWeight: 600, color: COLORS.textFaint, textTransform: "uppercase", letterSpacing: ".06em" }}>{COPY.timerLabel}</div>
+                  <div className="num" style={{ fontFamily: FONTS.display, fontWeight: 800, fontSize: "1.2rem", color: timeLeft < 300 ? COLORS.accent : COLORS.textPrimary }}>
+                    {formatTime(timeLeft)}
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            <div style={{ background: COLORS.accentSoft, border: `1px solid ${COLORS.accentBorder}`, borderRadius: "10px", padding: ".9rem 1rem", fontSize: ".82rem", color: COLORS.textMuted, lineHeight: 1.6, marginBottom: "2rem" }}>
-              {COPY.notePublic}
-            </div>
-
-            <button className="btn-red" onClick={() => setPhase("exam")}>{COPY.btnStart}</button>
-          </div>
-        )}
-
-        {/* ── EXAM ── */}
-        {phase === "exam" && (
-          <div>
-            {/* Прогресс-бар */}
-            <div style={{ marginBottom: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".72rem", color: COLORS.textFaint, marginBottom: ".4rem" }}>
-                <span style={{ color: subjectOf(q.subject)?.color, fontWeight: 700 }}>{subjectOf(q.subject)?.name}</span>
-                <span className="num">Вопрос {current + 1} из {MOCK_QUESTIONS.length}</span>
-              </div>
-              <div style={{ height: "4px", background: "rgba(255,255,255,0.05)", borderRadius: "2px", overflow: "hidden" }}>
-                <div style={{ height: "100%", width: `${((current + 1) / MOCK_QUESTIONS.length) * 100}%`, background: subjectOf(q.subject)?.color ?? COLORS.accent, borderRadius: "2px", transition: "width .3s" }} />
-              </div>
-            </div>
-
-            {/* Вопрос */}
-            <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: "14px", padding: "1.75rem", marginBottom: "1.25rem" }}>
-              <p style={{ fontSize: "1rem", color: COLORS.textPrimary, lineHeight: 1.65, fontWeight: 600 }}>{q.text}</p>
-            </div>
-
-            {/* Варианты */}
-            <div style={{ display: "flex", flexDirection: "column", gap: ".6rem", marginBottom: "1.5rem" }}>
-              {q.options.map((opt, i) => {
-                let cls = "opt";
-                if (chosen !== null) {
-                  if (i === q.correct) cls += " correct";
-                  else if (i === chosen && chosen !== q.correct) cls += " wrong";
-                } else if (chosen === i) {
-                  cls += " chosen";
-                }
-                return (
-                  <div key={i} className={cls} onClick={() => selectAnswer(i)}>
-                    <div style={{ width: "24px", height: "24px", borderRadius: "50%", border: `1.5px solid ${COLORS.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: ".72rem", fontWeight: 800, color: COLORS.textFaint, flexShrink: 0 }}>
-                      {String.fromCharCode(65 + i)}
-                    </div>
-                    {opt}
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: ".65rem", fontWeight: 600, color: COLORS.textFaint, textTransform: "uppercase", letterSpacing: ".06em" }}>{COPY.progressLabel}</div>
+                  <div className="num" style={{ fontFamily: FONTS.display, fontWeight: 800, fontSize: "1.2rem", color: COLORS.textPrimary }}>
+                    {answered}<span style={{ fontWeight: 400, color: COLORS.textFaint, fontSize: ".85rem" }}> / {MOCK_QUESTIONS.length}</span>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+                <button style={{ background: "rgba(255,58,58,0.1)", color: COLORS.accent, border: `1px solid ${COLORS.accentBorder}`, borderRadius: "8px", padding: ".45rem 1rem", fontFamily: FONTS.body, fontWeight: 700, fontSize: ".8rem", cursor: "pointer" }} onClick={finishExam}>
+                  {COPY.btnFinish}
+                </button>
+              </div>
+          )}
+          {phase !== "exam" && <div />}
+        </nav>
 
-            {/* Навигация */}
-            <div style={{ display: "flex", gap: ".75rem", justifyContent: "space-between" }}>
-              <button className="btn-ghost" onClick={goPrev} style={{ opacity: current === 0 ? 0.4 : 1 }} disabled={current === 0}>
-                {COPY.btnBack}
-              </button>
-              <button className="btn-red" onClick={goNext}>
-                {current === MOCK_QUESTIONS.length - 1 ? COPY.btnFinish : COPY.btnNext}
-              </button>
-            </div>
-          </div>
-        )}
+        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "3rem 2.5rem" }}>
 
-        {/* ── RESULT ── */}
-        {phase === "result" && (
-          <div style={{ textAlign: "center" }}>
-            <span className="section-label" style={{ display: "block", textAlign: "center" }}>{COPY.resultTitle}</span>
-            <div style={{ fontFamily: FONTS.display, fontSize: "5rem", fontWeight: 800, color: pct >= 60 ? COLORS.correctText : COLORS.accent, lineHeight: 1, marginBottom: ".5rem" }}>
-              {pct}%
-            </div>
-            <p style={{ fontSize: "1rem", color: COLORS.textMuted, marginBottom: "2.5rem" }}>
-              Правильных ответов: {score} из {MOCK_QUESTIONS.length}
-            </p>
+          {/* ── INTRO ── */}
+          {phase === "intro" && (
+              <div>
+                <span className="section-label">{COPY.pageLabel}</span>
+                <h1 style={{ fontFamily: FONTS.display, fontSize: "clamp(1.8rem,4vw,2.6rem)", fontWeight: 800, color: COLORS.textPrimary, letterSpacing: "-.025em", marginBottom: ".5rem" }}>
+                  {COPY.pageTitle}
+                </h1>
+                <p style={{ fontSize: ".9rem", color: COLORS.textMuted, marginBottom: "2.5rem" }}>{COPY.pageDesc}</p>
 
-            {/* Разбивка по предметам */}
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginBottom: "2.5rem", flexWrap: "wrap" }}>
-              {TRIAL_SUBJECTS.map(s => {
-                const qs   = MOCK_QUESTIONS.filter(q => q.subject === s.id);
-                const correct = qs.filter((q, idx) => answers[MOCK_QUESTIONS.indexOf(q)] === q.correct).length;
-                return (
-                  <div key={s.id} style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: "12px", padding: "1.25rem 1.75rem", minWidth: "160px" }}>
-                    <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: s.color, margin: "0 auto .75rem" }} />
-                    <div style={{ fontFamily: FONTS.display, fontSize: "1.5rem", fontWeight: 800, color: COLORS.textPrimary }}>{correct}/{qs.length}</div>
-                    <div style={{ fontSize: ".72rem", color: COLORS.textFaint, marginTop: ".25rem" }}>{s.name}</div>
+                <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: "14px", padding: "1.5rem", marginBottom: "1.5rem" }}>
+                  <div style={{ fontSize: ".72rem", fontWeight: 700, color: COLORS.textFaint, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "1rem" }}>Предметы пробного КТ</div>
+                  {TRIAL_SUBJECTS.map(s => (
+                      <div key={s.id} style={{ display: "flex", alignItems: "center", gap: ".75rem", marginBottom: ".65rem" }}>
+                        <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: s.color, flexShrink: 0 }} />
+                        <span style={{ fontWeight: 700, fontSize: ".9rem" }}>{s.name}</span>
+                        <span style={{ marginLeft: "auto", fontSize: ".78rem", color: COLORS.textFaint }}>{s.count} вопросов</span>
+                      </div>
+                  ))}
+                </div>
+
+                <div style={{ background: COLORS.accentSoft, border: `1px solid ${COLORS.accentBorder}`, borderRadius: "10px", padding: ".9rem 1rem", fontSize: ".82rem", color: COLORS.textMuted, lineHeight: 1.6, marginBottom: "2rem" }}>
+                  {COPY.notePublic}
+                </div>
+
+                <button className="btn-red" onClick={() => setPhase("exam")}>{COPY.btnStart}</button>
+              </div>
+          )}
+
+          {/* ── EXAM ── */}
+          {phase === "exam" && (
+              <div>
+                {/* Прогресс-бар */}
+                <div style={{ marginBottom: "1.5rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".72rem", color: COLORS.textFaint, marginBottom: ".4rem" }}>
+                    <span style={{ color: subjectOf(q.subject)?.color, fontWeight: 700 }}>{subjectOf(q.subject)?.name}</span>
+                    <span className="num">Вопрос {current + 1} из {MOCK_QUESTIONS.length}</span>
                   </div>
-                );
-              })}
-            </div>
+                  <div style={{ height: "4px", background: "rgba(255,255,255,0.05)", borderRadius: "2px", overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${((current + 1) / MOCK_QUESTIONS.length) * 100}%`, background: subjectOf(q.subject)?.color ?? COLORS.accent, borderRadius: "2px", transition: "width .3s" }} />
+                  </div>
+                </div>
 
-            <div style={{ display: "flex", gap: ".75rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <button className="btn-ghost" onClick={() => { setPhase("intro"); setCurrent(0); setAnswers(Array(MOCK_QUESTIONS.length).fill(null)); setTimeLeft(TRIAL_DURATION_SEC); }}>
-                {COPY.btnRestart}
-              </button>
-              <button className="btn-red" onClick={() => navigate("/auth")}>
-                {COPY.btnRegister}
-              </button>
-            </div>
-          </div>
-        )}
+                {/* Вопрос */}
+                <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: "14px", padding: "1.75rem", marginBottom: "1.25rem" }}>
+                  <p style={{ fontSize: "1rem", color: COLORS.textPrimary, lineHeight: 1.65, fontWeight: 600 }}>{q.text}</p>
+                </div>
 
+                {/* Варианты */}
+                <div style={{ display: "flex", flexDirection: "column", gap: ".6rem", marginBottom: "1.5rem" }}>
+                  {q.options.map((opt, i) => {
+                    let cls = "opt";
+                    if (chosen !== null) {
+                      if (i === q.correct) cls += " correct";
+                      else if (i === chosen && chosen !== q.correct) cls += " wrong";
+                    } else if (chosen === i) {
+                      cls += " chosen";
+                    }
+                    return (
+                        <div key={i} className={cls} onClick={() => selectAnswer(i)}>
+                          <div style={{ width: "24px", height: "24px", borderRadius: "50%", border: `1.5px solid ${COLORS.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: ".72rem", fontWeight: 800, color: COLORS.textFaint, flexShrink: 0 }}>
+                            {String.fromCharCode(65 + i)}
+                          </div>
+                          {opt}
+                        </div>
+                    );
+                  })}
+                </div>
+
+                {/* Навигация */}
+                <div style={{ display: "flex", gap: ".75rem", justifyContent: "space-between" }}>
+                  <button className="btn-ghost" onClick={goPrev} style={{ opacity: current === 0 ? 0.4 : 1 }} disabled={current === 0}>
+                    {COPY.btnBack}
+                  </button>
+                  <button className="btn-red" onClick={goNext}>
+                    {current === MOCK_QUESTIONS.length - 1 ? COPY.btnFinish : COPY.btnNext}
+                  </button>
+                </div>
+              </div>
+          )}
+
+          {/* ── RESULT ── */}
+          {phase === "result" && (
+              <div style={{ textAlign: "center" }}>
+                <span className="section-label" style={{ display: "block", textAlign: "center" }}>{COPY.resultTitle}</span>
+                <div style={{ fontFamily: FONTS.display, fontSize: "5rem", fontWeight: 800, color: pct >= 60 ? COLORS.correctText : COLORS.accent, lineHeight: 1, marginBottom: ".5rem" }}>
+                  {pct}%
+                </div>
+                <p style={{ fontSize: "1rem", color: COLORS.textMuted, marginBottom: "2.5rem" }}>
+                  Правильных ответов: {score} из {MOCK_QUESTIONS.length}
+                </p>
+
+                {/* Разбивка по предметам */}
+                <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginBottom: "2.5rem", flexWrap: "wrap" }}>
+                  {TRIAL_SUBJECTS.map(s => {
+                    const qs   = MOCK_QUESTIONS.filter(q => q.subject === s.id);
+                    const correct = qs.filter((q, idx) => answers[MOCK_QUESTIONS.indexOf(q)] === q.correct).length;
+                    return (
+                        <div key={s.id} style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: "12px", padding: "1.25rem 1.75rem", minWidth: "160px" }}>
+                          <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: s.color, margin: "0 auto .75rem" }} />
+                          <div style={{ fontFamily: FONTS.display, fontSize: "1.5rem", fontWeight: 800, color: COLORS.textPrimary }}>{correct}/{qs.length}</div>
+                          <div style={{ fontSize: ".72rem", color: COLORS.textFaint, marginTop: ".25rem" }}>{s.name}</div>
+                        </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{ display: "flex", gap: ".75rem", justifyContent: "center", flexWrap: "wrap" }}>
+                  <button className="btn-ghost" onClick={() => { setPhase("intro"); setCurrent(0); setAnswers(Array(MOCK_QUESTIONS.length).fill(null)); setTimeLeft(TRIAL_DURATION_SEC); }}>
+                    {COPY.btnRestart}
+                  </button>
+                  <button className="btn-red" onClick={() => navigate("/auth")}>
+                    {COPY.btnRegister}
+                  </button>
+                </div>
+              </div>
+          )}
+
+        </div>
       </div>
-    </div>
   );
 }

@@ -29,14 +29,14 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
 }
 
 const loginRequest    = (email: string, password: string) =>
-  postJson<LoginResponse>(`${API.baseUrl}${API.login}`, { email, password });
+    postJson<LoginResponse>(`${API.baseUrl}${API.login}`, { email, password });
 
 const registerRequest = (email: string, username: string, password: string, phone_number: string) =>
-  postJson<LoginResponse>(`${API.baseUrl}${API.register}`, { email, username, password, phone_number });
+    postJson<LoginResponse>(`${API.baseUrl}${API.register}`, { email, username, password, phone_number });
 
 // Экспортируется для использования в api/interceptors при 401
 export const refreshAccessToken = (refresh: string) =>
-  postJson<{ access: string }>(`${API.baseUrl}${API.refresh}`, { refresh });
+    postJson<{ access: string }>(`${API.baseUrl}${API.refresh}`, { refresh });
 
 // ============================================================
 //  TYPES
@@ -85,8 +85,8 @@ export default function Auth() {
     el?.classList.add("bad");
     if (tRef.current) window.clearTimeout(tRef.current);
     tRef.current = window.setTimeout(
-      () => el?.classList.remove("bad"),
-      RIGHT_SCENE.motion.shakeDuration * 1000 + 100,
+        () => el?.classList.remove("bad"),
+        RIGHT_SCENE.motion.shakeDuration * 1000 + 100,
     );
   };
 
@@ -123,12 +123,12 @@ export default function Auth() {
   };
 
   return (
-    <div
-      className="grid"
-      style={{ background: COLORS.bgPage, fontFamily: FONTS.body, minHeight: "100vh", display: "grid", gridTemplateColumns: "minmax(0, 520px) 1fr" }}
-    >
-      <link href={FONTS.googleUrl} rel="stylesheet" />
-      <style>{`
+      <div
+          className="grid"
+          style={{ background: COLORS.bgPage, fontFamily: FONTS.body, minHeight: "100vh", display: "grid", gridTemplateColumns: "minmax(0, 520px) 1fr" }}
+      >
+        <link href={FONTS.googleUrl} rel="stylesheet" />
+        <style>{`
         *{box-sizing:border-box;margin:0;padding:0}
         ::selection{background:#FF3A3A30}
 
@@ -143,16 +143,9 @@ export default function Auth() {
         .link{font-size:.78rem;color:${COLORS.textFaint};cursor:pointer;transition:color .18s}
         .link:hover{color:${COLORS.accent}}
 
-        /* Кнопка «Назад» с анимацией стрелки */
-        .back{display:inline-flex;align-items:center;gap:.5rem;font-weight:800;color:${COLORS.textFaint};cursor:pointer;user-select:none;width:fit-content}
-        .back .arr{display:inline-block;transition:transform .18s,color .18s}
-        .back .txt{position:relative;transition:color .18s}
-        .back .txt:after{content:"";position:absolute;left:0;bottom:-3px;height:2px;width:0;background:${COLORS.accent};transition:width .18s}
-        .back:hover .arr{transform:translateX(-4px);color:${COLORS.accent}}
-        .back:hover .txt{color:${COLORS.accent}}
-        .back:hover .txt:after{width:100%}
-
-        @keyframes spin{to{transform:rotate(360deg)}}
+        .logo-link{display:inline-flex;align-items:center;font-family:${FONTS.display};font-size:1.28rem;font-weight:900;letter-spacing:-.01em;color:${COLORS.textBody};cursor:pointer;width:fit-content;transition:opacity .18s ease,filter .18s ease,transform .18s ease}
+ .logo-link:hover{opacity:.72;filter:brightness(1.04);transform:translateY(-1px)}
+ @keyframes spin{to{transform:rotate(360deg)}}
         .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
 
         @media(max-width:980px){
@@ -160,108 +153,108 @@ export default function Auth() {
         }
       `}</style>
 
-      {/* ── LEFT: форма ── */}
-      <div style={{ background: COLORS.bgLeft, borderRight: "1px solid rgba(255,255,255,0.06)", padding: "2.25rem", display: "flex", flexDirection: "column" }}>
+        {/* ── LEFT: форма ── */}
+        <div style={{ background: COLORS.bgLeft, borderRight: "1px solid rgba(255,255,255,0.06)", padding: "2.25rem", display: "flex", flexDirection: "column" }}>
 
-        {/* Шапка */}
-        <div style={{ marginBottom: "1.75rem" }}>
-          <div style={{ fontFamily: FONTS.display, fontSize: "1.15rem", fontWeight: 900, letterSpacing: "-.01em", color: COLORS.textBody, marginBottom: ".6rem" }}>
-            {BRAND.name}<span style={{ color: COLORS.accent }}>{BRAND.accent}</span>
+          {/* Шапка */}
+          <div style={{ marginBottom: "1.75rem" }}>
+            <div
+                className="logo-link"
+                onClick={() => navigate("/")}
+                title={COPY.backToMenu}
+            >
+              {BRAND.name}<span style={{ color: COLORS.accent }}>{BRAND.accent}</span>
+            </div>
           </div>
-          <div className="back" onClick={() => navigate("/")}>
-            <span className="arr">←</span>
-            <span className="txt">{COPY.backToMenu}</span>
+
+          {/* Форма */}
+          <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
+            <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: "420px" }}>
+
+              <p style={{ fontSize: ".68rem", fontWeight: 900, letterSpacing: ".12em", textTransform: "uppercase", color: COLORS.accent, marginBottom: ".6rem" }}>
+                {COPY.label}
+              </p>
+              <h1 style={{ fontFamily: FONTS.display, fontSize: "2rem", fontWeight: 900, color: COLORS.textPrimary, letterSpacing: "-.03em", marginBottom: ".4rem" }}>
+                {title}
+              </h1>
+              <p style={{ fontSize: ".85rem", color: COLORS.textFaint, lineHeight: 1.6, marginBottom: "1.35rem" }}>
+                {subtitle}
+              </p>
+
+              {error && (
+                  <div style={{ background: COLORS.errBg, border: `1px solid ${COLORS.errBorder}`, borderRadius: "10px", padding: ".8rem 1rem", fontSize: ".82rem", color: COLORS.errText, marginBottom: "1rem" }}>
+                    {error}
+                  </div>
+              )}
+              {ok && (
+                  <div style={{ background: COLORS.okBg, border: `1px solid ${COLORS.okBorder}`, borderRadius: "10px", padding: ".8rem 1rem", fontSize: ".82rem", color: COLORS.okText, marginBottom: "1rem" }}>
+                    {ok}
+                  </div>
+              )}
+
+              {/* ── LOGIN ── */}
+              {mode === "login" && (
+                  <>
+                    <Field label={COPY.login.labelEmail}>
+                      <input className="inp" type="email" placeholder="user@example.com" autoComplete="email"
+                             value={email} onChange={e => setEmail(e.target.value)} />
+                    </Field>
+                    <Field label={COPY.login.labelPass}>
+                      <PassInput value={password} onChange={setPassword} show={showPass} toggle={() => setShowPass(p => !p)} />
+                    </Field>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1.25rem" }}>
+                      <span className="link" onClick={() => switchMode("register")}>{COPY.login.toRegister} <b style={{ color: COLORS.accent }}>{COPY.login.toRegisterBtn}</b></span>
+                      <span className="link" onClick={() => switchMode("forgot")}>{COPY.login.forgot}</span>
+                    </div>
+                    <SubmitBtn loading={loading} label={COPY.login.btnSubmit} loadingLabel={COPY.login.btnLoading} />
+                  </>
+              )}
+
+              {/* ── REGISTER ── */}
+              {mode === "register" && (
+                  <>
+                    <Field label={COPY.register.labelEmail}>
+                      <input className="inp" type="email" placeholder="user@example.com" autoComplete="email"
+                             value={regEmail} onChange={e => setRegEmail(e.target.value)} />
+                    </Field>
+                    <Field label={COPY.register.labelUsername}>
+                      <input className="inp" type="text" placeholder="newuser"
+                             value={username} onChange={e => setUsername(e.target.value)} />
+                    </Field>
+                    <Field label={COPY.register.labelPhone}>
+                      <input className="inp" type="tel" placeholder="87771234567"
+                             value={phone} onChange={e => setPhone(e.target.value)} />
+                    </Field>
+                    <Field label={COPY.register.labelPass} style={{ marginBottom: "1.15rem" }}>
+                      <PassInput value={regPass} onChange={setRegPass} show={showPass} toggle={() => setShowPass(p => !p)} placeholder="минимум 8 символов" newPass />
+                    </Field>
+                    <SubmitBtn loading={loading} label={COPY.register.btnSubmit} loadingLabel={COPY.register.btnLoading} />
+                    <div style={{ marginTop: "1rem" }}>
+                      <span className="link" onClick={() => switchMode("login")}>{COPY.register.toLogin} <b style={{ color: COLORS.accent }}>{COPY.register.toLoginBtn}</b></span>
+                    </div>
+                  </>
+              )}
+
+              {/* ── FORGOT ── */}
+              {mode === "forgot" && (
+                  <>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "1rem", marginBottom: "1rem", color: COLORS.textFaint, lineHeight: 1.65, fontSize: ".85rem" }}>
+                      {COPY.okForgot}
+                    </div>
+                    <SubmitBtn loading={loading} label={COPY.forgot.btnSubmit} loadingLabel={COPY.forgot.btnSubmit} />
+                    <div style={{ marginTop: "1rem" }}>
+                      <span className="link" onClick={() => switchMode("login")}>{COPY.forgot.back}</span>
+                    </div>
+                  </>
+              )}
+
+            </form>
           </div>
         </div>
 
-        {/* Форма */}
-        <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
-          <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: "420px" }}>
-
-            <p style={{ fontSize: ".68rem", fontWeight: 900, letterSpacing: ".12em", textTransform: "uppercase", color: COLORS.accent, marginBottom: ".6rem" }}>
-              {COPY.label}
-            </p>
-            <h1 style={{ fontFamily: FONTS.display, fontSize: "2rem", fontWeight: 900, color: COLORS.textPrimary, letterSpacing: "-.03em", marginBottom: ".4rem" }}>
-              {title}
-            </h1>
-            <p style={{ fontSize: ".85rem", color: COLORS.textFaint, lineHeight: 1.6, marginBottom: "1.35rem" }}>
-              {subtitle}
-            </p>
-
-            {error && (
-              <div style={{ background: COLORS.errBg, border: `1px solid ${COLORS.errBorder}`, borderRadius: "10px", padding: ".8rem 1rem", fontSize: ".82rem", color: COLORS.errText, marginBottom: "1rem" }}>
-                {error}
-              </div>
-            )}
-            {ok && (
-              <div style={{ background: COLORS.okBg, border: `1px solid ${COLORS.okBorder}`, borderRadius: "10px", padding: ".8rem 1rem", fontSize: ".82rem", color: COLORS.okText, marginBottom: "1rem" }}>
-                {ok}
-              </div>
-            )}
-
-            {/* ── LOGIN ── */}
-            {mode === "login" && (
-              <>
-                <Field label={COPY.login.labelEmail}>
-                  <input className="inp" type="email" placeholder="user@example.com" autoComplete="email"
-                    value={email} onChange={e => setEmail(e.target.value)} />
-                </Field>
-                <Field label={COPY.login.labelPass}>
-                  <PassInput value={password} onChange={setPassword} show={showPass} toggle={() => setShowPass(p => !p)} />
-                </Field>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1.25rem" }}>
-                  <span className="link" onClick={() => switchMode("register")}>{COPY.login.toRegister} <b style={{ color: COLORS.accent }}>{COPY.login.toRegisterBtn}</b></span>
-                  <span className="link" onClick={() => switchMode("forgot")}>{COPY.login.forgot}</span>
-                </div>
-                <SubmitBtn loading={loading} label={COPY.login.btnSubmit} loadingLabel={COPY.login.btnLoading} />
-              </>
-            )}
-
-            {/* ── REGISTER ── */}
-            {mode === "register" && (
-              <>
-                <Field label={COPY.register.labelEmail}>
-                  <input className="inp" type="email" placeholder="user@example.com" autoComplete="email"
-                    value={regEmail} onChange={e => setRegEmail(e.target.value)} />
-                </Field>
-                <Field label={COPY.register.labelUsername}>
-                  <input className="inp" type="text" placeholder="newuser"
-                    value={username} onChange={e => setUsername(e.target.value)} />
-                </Field>
-                <Field label={COPY.register.labelPhone}>
-                  <input className="inp" type="tel" placeholder="87771234567"
-                    value={phone} onChange={e => setPhone(e.target.value)} />
-                </Field>
-                <Field label={COPY.register.labelPass} style={{ marginBottom: "1.15rem" }}>
-                  <PassInput value={regPass} onChange={setRegPass} show={showPass} toggle={() => setShowPass(p => !p)} placeholder="минимум 8 символов" newPass />
-                </Field>
-                <SubmitBtn loading={loading} label={COPY.register.btnSubmit} loadingLabel={COPY.register.btnLoading} />
-                <div style={{ marginTop: "1rem" }}>
-                  <span className="link" onClick={() => switchMode("login")}>{COPY.register.toLogin} <b style={{ color: COLORS.accent }}>{COPY.register.toLoginBtn}</b></span>
-                </div>
-              </>
-            )}
-
-            {/* ── FORGOT ── */}
-            {mode === "forgot" && (
-              <>
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "1rem", marginBottom: "1rem", color: COLORS.textFaint, lineHeight: 1.65, fontSize: ".85rem" }}>
-                  {COPY.okForgot}
-                </div>
-                <SubmitBtn loading={loading} label={COPY.forgot.btnSubmit} loadingLabel={COPY.forgot.btnSubmit} />
-                <div style={{ marginTop: "1rem" }}>
-                  <span className="link" onClick={() => switchMode("login")}>{COPY.forgot.back}</span>
-                </div>
-              </>
-            )}
-
-          </form>
-        </div>
+        {/* ── RIGHT: анимированная сцена ── */}
+        <StudyCloud />
       </div>
-
-      {/* ── RIGHT: анимированная сцена ── */}
-      <StudyCloud />
-    </div>
   );
 }
 
@@ -271,12 +264,12 @@ export default function Auth() {
 
 function Field({ label, children, style }: { label: string; children: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <div style={{ marginBottom: "1rem", ...style }}>
-      <label style={{ display: "block", fontSize: ".72rem", fontWeight: 900, letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.textFaint, marginBottom: ".5rem" }}>
-        {label}
-      </label>
-      {children}
-    </div>
+      <div style={{ marginBottom: "1rem", ...style }}>
+        <label style={{ display: "block", fontSize: ".72rem", fontWeight: 900, letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.textFaint, marginBottom: ".5rem" }}>
+          {label}
+        </label>
+        {children}
+      </div>
   );
 }
 
@@ -289,31 +282,31 @@ function PassInput({ value, onChange, show, toggle, placeholder = "••••�
   newPass?: boolean;
 }) {
   return (
-    <div style={{ position: "relative" }}>
-      <input
-        className="inp"
-        type={show ? "text" : "password"}
-        placeholder={placeholder}
-        autoComplete={newPass ? "new-password" : "current-password"}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        style={{ paddingRight: "5.8rem" }}
-      />
-      <button
-        type="button"
-        onClick={toggle}
-        style={{ position: "absolute", right: ".9rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: COLORS.textFaint, fontSize: ".75rem", fontFamily: FONTS.body, fontWeight: 800 }}
-      >
-        {show ? "скрыть" : "показать"}
-      </button>
-    </div>
+      <div style={{ position: "relative" }}>
+        <input
+            className="inp"
+            type={show ? "text" : "password"}
+            placeholder={placeholder}
+            autoComplete={newPass ? "new-password" : "current-password"}
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            style={{ paddingRight: "5.8rem" }}
+        />
+        <button
+            type="button"
+            onClick={toggle}
+            style={{ position: "absolute", right: ".9rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: COLORS.textFaint, fontSize: ".75rem", fontFamily: FONTS.body, fontWeight: 800 }}
+        >
+          {show ? "скрыть" : "показать"}
+        </button>
+      </div>
   );
 }
 
 function SubmitBtn({ loading, label, loadingLabel }: { loading: boolean; label: string; loadingLabel: string }) {
   return (
-    <button className="btn-red" type="submit" disabled={loading}>
-      {loading ? <><div className="spinner" /><span>{loadingLabel}</span></> : label}
-    </button>
+      <button className="btn-red" type="submit" disabled={loading}>
+        {loading ? <><div className="spinner" /><span>{loadingLabel}</span></> : label}
+      </button>
   );
 }
