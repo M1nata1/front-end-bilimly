@@ -192,7 +192,7 @@ export default function StudyCloud() {
           box-shadow:0 0 0 4px rgba(255,58,58,0.14);
         }
 
-        /* Ошибка формы: оставляем прежнее дрожание */
+        /* Ошибка формы: дрожание */
         @keyframes cloudshake{
           0%,100%{transform:translateX(0)}
           20%{transform:translateX(-10px)}
@@ -203,6 +203,27 @@ export default function StudyCloud() {
 
         .cloud.bad .cloud-item{
           animation:cloudshake ${M.shakeDuration}s ease-in-out 1 !important;
+        }
+
+        /*
+          Успех формы: круговое движение вокруг собственной позиции.
+          Техника: rotate(Θ) translateX(r) rotate(-Θ + --r) даёт точку на окружности радиуса r.
+          0–8%  — разгон наружу к орбите
+          8–87% — один полный оборот (360°)
+          87–100% — плавный возврат в исходную точку
+        */
+        @keyframes successOrbit{
+          0%  {transform:translate(-50%,-50%) rotate(0deg)   translateX(0px)  rotate(var(--r))               scale(var(--s))}
+          8%  {transform:translate(-50%,-50%) rotate(0deg)   translateX(26px) rotate(var(--r))               scale(calc(var(--s) + 0.07))}
+          29% {transform:translate(-50%,-50%) rotate(90deg)  translateX(26px) rotate(calc(-90deg  + var(--r))) scale(calc(var(--s) + 0.08))}
+          50% {transform:translate(-50%,-50%) rotate(180deg) translateX(26px) rotate(calc(-180deg + var(--r))) scale(calc(var(--s) + 0.06))}
+          71% {transform:translate(-50%,-50%) rotate(270deg) translateX(26px) rotate(calc(-270deg + var(--r))) scale(calc(var(--s) + 0.07))}
+          87% {transform:translate(-50%,-50%) rotate(360deg) translateX(26px) rotate(calc(-360deg + var(--r))) scale(calc(var(--s) + 0.03))}
+          100%{transform:translate(-50%,-50%) rotate(360deg) translateX(0px)  rotate(var(--r))               scale(var(--s))}
+        }
+
+        .cloud.good .cloud-item{
+          animation:successOrbit ${M.successDuration}s cubic-bezier(.42,.05,.35,1) 1 !important;
         }
 
         @media (max-width:980px){

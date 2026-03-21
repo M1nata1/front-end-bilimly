@@ -36,6 +36,34 @@ body {
   background: #D4A85340;
 }
 
+/* ── Логотип (общий для всех хедеров) ── */
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 1.28rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  cursor: pointer;
+  width: fit-content;
+  color: inherit;
+  transition: opacity .18s ease, filter .18s ease, transform .18s ease;
+}
+.logo-link:hover {
+  opacity: .72;
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+/* ── Анимация переходов между страницами ── */
+@keyframes page-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.page-enter {
+  animation: page-in .25s ease-out forwards;
+}
+
 /* ── Скроллбар ── */
 ::-webkit-scrollbar {
   width: 6px;

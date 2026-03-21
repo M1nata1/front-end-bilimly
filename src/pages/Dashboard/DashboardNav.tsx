@@ -23,7 +23,7 @@ export default function DashboardNav() {
       display: "flex", alignItems: "center", justifyContent: "space-between",
       position: "sticky", top: 0, zIndex: 100,
     }}>
-      <div style={{ fontFamily: FONTS.display, fontSize: "1.1rem", fontWeight: 800, letterSpacing: "-.01em" }}>
+      <div className="logo-link" style={{ fontFamily: FONTS.display, color: COLORS.textBody }}>
         {BRAND.name}<span style={{ color: COLORS.accent }}>{BRAND.accent}</span>
       </div>
 

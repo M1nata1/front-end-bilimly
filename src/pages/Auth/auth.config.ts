@@ -26,7 +26,10 @@ export const REDIRECT = {
 // --- Тексты ---
 export const COPY = {
   label:      "Добро пожаловать",
-  errEmpty:   "Заполни все поля",
+  errEmpty:       "Заполни все поля",
+  errPhone:       "Номер телефона должен содержать ровно 11 цифр",
+  errEmailFormat: "Введи корректный email",
+  errUsername:    "Имя пользователя: только буквы, цифры, _ и - (3–30 символов)",
   errInvalid: "Неверный email или пароль",
   errLimit:   "Слишком много попыток. Попробуй позже.",
   errServer:  "Ошибка сервера. Попробуй позже.",
@@ -92,6 +95,25 @@ export const FONTS = {
   googleUrl: "https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Nunito:wght@400;500;600;700&display=swap",
 };
 
+// ============================================================
+//  ВАЛИДАЦИЯ И САНИТИЗАЦИЯ ВВОДА
+// ============================================================
+
+// Удаляет SQL-опасные символы из текстовых полей (не применять к паролю)
+export const sanitizeField = (value: string): string =>
+  value
+    .replace(/['"`;\\]/g, "")   // кавычки, бэктик, точка с запятой, бэкслеш
+    .replace(/--+/g, "")         // SQL-комментарий --
+    .replace(/\/\*/g, "")        // SQL-блок-комментарий /*
+    .replace(/\*\//g, "");       // SQL-блок-комментарий */
+
+export const isValidEmail = (email: string): boolean =>
+  /^[^\s@]{1,64}@[^\s@]{1,63}(\.[^\s@]{2,63})+$/.test(email.trim());
+
+// Только буквы, цифры, _ и -, длина 3–30
+export const isValidUsername = (username: string): boolean =>
+  /^[a-zA-Z0-9_\-]{3,30}$/.test(username.trim());
+
 // --- Правая сцена — анимация ---
 export const RIGHT_SCENE = {
   layout: {
@@ -103,6 +125,7 @@ export const RIGHT_SCENE = {
     blobPulseScale:   0.06,  // амплитуда фоновых пятен
     blobSyncDuration: 8.6,   // единый ритм пятен (сек)
     shakeDuration:    0.55,  // дрожание при ошибке (сек)
+    successDuration:  5.0,   // круговое движение при успехе (сек)
   },
   backgrounds: [
     { width: 520, height: 360, top: "-8%", left: "-6%", color: "rgba(255,58,58,0.12)",  blur: 90, duration: 8.6, fx: 26, fy: 18, pulse: 0.060, delay: 0.00 },
