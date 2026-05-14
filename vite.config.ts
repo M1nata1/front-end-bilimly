@@ -17,5 +17,11 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    proxy: {
+      '/api': {
+        target: 'https://projectx-api-718606133437.us-central1.run.app',
+        changeOrigin: true,
+      },
+    },
   },
 })

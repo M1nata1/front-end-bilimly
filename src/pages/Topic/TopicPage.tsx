@@ -136,6 +136,16 @@ function isNumericId(id: string | undefined): boolean {
   return !!id && /^\d+$/.test(id);
 }
 
+function youtubeEmbedUrl(url: string): string | null {
+  try {
+    const u = new URL(url);
+    let id: string | null = null;
+    if (u.hostname === "youtu.be")               id = u.pathname.slice(1);
+    else if (u.hostname.includes("youtube.com")) id = u.searchParams.get("v");
+    return id ? `https://www.youtube.com/embed/${id}` : null;
+  } catch { return null; }
+}
+
 export default function TopicPage() {
   const { courseId, topicId } = useParams<{ courseId: string; topicId: string }>();
   const navigate = useNavigate();
@@ -151,6 +161,7 @@ export default function TopicPage() {
 
   // ── Состояние ────────────────────────────────────────────────
   const [content, setContent]     = useState<unknown>(null);
+  const [videoLink, setVideoLink] = useState<string | null>(null);
   const [quiz,    setQuiz]        = useState<QuizQuestion[]>([]);
   const [answers, setAnswers]     = useState<Record<number, number[]>>({});
 
@@ -336,9 +347,12 @@ export default function TopicPage() {
         // Some lessons wrap the actual doc inside `lesson_text`
         const doc = raw && typeof raw === "object" && raw.lesson_text ? raw.lesson_text : raw;
         setContent(fixMediaUrls(doc));
+        const vl = (doc as Record<string, unknown>)?.videoLink;
+        setVideoLink(typeof vl === "string" ? vl : null);
       }
       return;
     }
+    setVideoLink(null);
     const loader = LESSON_CONTENT[topicId ?? ""];
     if (loader) loader().then(m => setContent(m.default));
     else setContent(null);
@@ -783,6 +797,29 @@ export default function TopicPage() {
                 <div style={{ fontSize: ".75rem", color: COLORS.textFaint, marginTop: ".5rem" }}>тест</div>
               )}
             </div>
+
+            {/* Видеолекция */}
+            {videoLink && (() => {
+              const embed = youtubeEmbedUrl(videoLink);
+              if (!embed) return null;
+              return (
+                <div className="fade-up-2" style={{ marginBottom: "2rem" }}>
+                  <div style={{
+                    position: "relative", paddingBottom: "56.25%", height: 0,
+                    borderRadius: "12px", overflow: "hidden",
+                    background: COLORS.bgCard, border: `1px solid ${COLORS.border}`,
+                  }}>
+                    <iframe
+                      src={embed}
+                      title="Видеолекция"
+                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Статья */}
             {(apiLoading && useApi) ? (
